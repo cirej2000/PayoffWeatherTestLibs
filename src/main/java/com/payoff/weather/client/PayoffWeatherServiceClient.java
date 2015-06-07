@@ -27,7 +27,7 @@ public class PayoffWeatherServiceClient {
         rb = getBundle("WeatherResourcesSite", new Locale("en", "US"));
         requestUrl=new StringBuilder("https://");
         requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath")).append("?").append(rb.getString("defaultParameter"));
-
+        System.out.println("Dummy output force update.");
     }
 
     public void get(String location)
