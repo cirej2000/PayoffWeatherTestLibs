@@ -1,3 +1,4 @@
 language: java
-script: jdk_switcher use oraclejdk8
-script: mvn -DskipTests=true clean install
+script:
+    - jdk_switcher use oraclejdk8
+    - mvn -DskipTests=true clean install
