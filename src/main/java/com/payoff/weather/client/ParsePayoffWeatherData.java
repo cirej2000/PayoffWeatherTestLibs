@@ -7,16 +7,17 @@ import org.json.JSONObject;
  * Created by eric on 6/6/2015.
  */
 public class ParsePayoffWeatherData {
+
     public static int getErrorMessageCode(String error)
     {
-        JSONObject msg = new JSONObject(error);
-        return msg.getInt("code");
+        JSONArray responseSet = new JSONArray(error);
+        return responseSet.getJSONObject(0).getInt("code");
     }
 
     public static String getErrorMessage(String error)
     {
-        JSONObject msg = new JSONObject(error);
-        return msg.getString("message");
+        JSONArray responseSet = new JSONArray(error);
+        return responseSet.getJSONObject(0).getString("message");
     }
 
     public static int getResultSetSize(String response){

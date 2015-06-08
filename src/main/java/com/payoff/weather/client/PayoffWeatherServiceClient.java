@@ -16,29 +16,34 @@ import static java.util.ResourceBundle.*;
 public class PayoffWeatherServiceClient {
     private int httpStatusCode;
     private String jsonResponse = "";
-    private String hostName = "";
-    private String urlPath = "";
-    private StringBuilder requestUrl = null;
+   // private String hostName = "";
+   // private String urlPath = "";
+   // private StringBuilder requestUrl = null;
     private Response responseObject = null;
     private ResourceBundle rb;
 
     public PayoffWeatherServiceClient()
     {
         rb = getBundle("WeatherResourcesSite", new Locale("en", "US"));
-        requestUrl=new StringBuilder("https://");
-        requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath")).append("?").append(rb.getString("defaultParameter"));
-        System.out.println("Dummy output force update.");
+       // requestUrl=new StringBuilder("https://");
+       // requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath")).append("?").append(rb.getString("defaultParameter"));
+        //System.out.println("Dummy output force update.");
     }
 
-    public PayoffWeatherServiceClient(boolean badUrl)
+    public void callWeatherService(BadUrlTypes type)
     {
         rb = getBundle("WeatherResourcesSite", new Locale("en", "US"));
-        requestUrl=new StringBuilder("https://");
-        if (badUrl)
-            requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath"));
-        else
-            requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath")).append("?").append(rb.getString("defaultParameter"));
-        System.out.println("Dummy output force update.");
+        //requestUrl=new StringBuilder("https://");
+        if (type.equals(BadUrlTypes.NO_LOCATION))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa", rb.getString("header2"), rb.getString("headerValue2")).get("https://george-vustrey-weather.p.mashape.com/api.php");
+        else if(type.equals(BadUrlTypes.NO_AUTH))
+            responseObject = com.jayway.restassured.RestAssured.given().headers(rb.getString("header2"), rb.getString("headerValue2")).get("https://george-vustrey-weather.p.mashape.com/api.php?location=Paris");
+        else if(type.equals(BadUrlTypes.NO_AUTH_KEY))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", null, rb.getString("header2"), rb.getString("headerValue2")).get("https://george-vustrey-weather.p.mashape.com/api.php?location=Berlin");
+        else if(type.equals(BadUrlTypes.BAD_AUTH))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1 ", rb.getString("header2"), rb.getString("headerValue2")).get("https://george-vustrey-weather.p.mashape.com/api.php?location=Chicago");
+        jsonResponse = responseObject.asString();
+        httpStatusCode = responseObject.getStatusCode();
     }
 
     public void callWeatherService(String method, String location)
