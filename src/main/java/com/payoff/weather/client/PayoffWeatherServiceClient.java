@@ -30,13 +30,33 @@ public class PayoffWeatherServiceClient {
         System.out.println("Dummy output force update.");
     }
 
-    public void get(String location)
+    public PayoffWeatherServiceClient(boolean badUrl)
     {
-        //given().header("X-Mashape-Key","5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa",rb.getString("header2"),rb.getString("headerValue2"));
-        responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa", rb.getString("header2"), rb.getString("headerValue2")).get("https://george-vustrey-weather.p.mashape.com/api.php?location="+location);
+        rb = getBundle("WeatherResourcesSite", new Locale("en", "US"));
+        requestUrl=new StringBuilder("https://");
+        if (badUrl)
+            requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath"));
+        else
+            requestUrl.append(rb.getString("defaultWeatherHost")).append(rb.getString("defaultServicePath")).append(rb.getString("defaultServicePath")).append("?").append(rb.getString("defaultParameter"));
+        System.out.println("Dummy output force update.");
+    }
+
+    public void callWeatherService(String method, String location)
+    {
+        if (method.toLowerCase().equals("get"))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa", rb.getString("header2"), rb.getString("headerValue2")).get("https://george-vustrey-weather.p.mashape.com/api.php?location="+location);
+        else if (method.toLowerCase().equals("post"))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa", rb.getString("header2"), rb.getString("headerValue2")).post("https://george-vustrey-weather.p.mashape.com/api.php?location=" + location);
+        else if (method.toLowerCase().equals("put"))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa", rb.getString("header2"), rb.getString("headerValue2")).put("https://george-vustrey-weather.p.mashape.com/api.php?location=" + location);
+        else if (method.toLowerCase().equals("delete"))
+            responseObject = com.jayway.restassured.RestAssured.given().headers("X-Mashape-Key", "5eaiIdkH1bmshSmjkdw9LNYIspr0p1mvRUTjsn7Sgpt1V2NaMa", rb.getString("header2"), rb.getString("headerValue2")).put("https://george-vustrey-weather.p.mashape.com/api.php?location="+location);
+
+        //store the response as a string for now and put our code in an integer for later retrieval
         jsonResponse = responseObject.asString();
         httpStatusCode = responseObject.getStatusCode();
     }
+
 
     public String getResponseBody()
     {
